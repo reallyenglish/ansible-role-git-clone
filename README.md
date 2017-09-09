@@ -4,7 +4,7 @@ A simple wrapper of `ansible` `git` module to clone repositories.
 
 # Requirements
 
-* [`ansible-role-git`](https://github.com/reallyenglish.com/ansible-role-git)
+None
 
 # Role Variables
 
@@ -37,7 +37,7 @@ Additionally, the following keys are supported in the table below.
 
 # Dependencies
 
-None
+* [`ansible-role-git`](https://github.com/reallyenglish.com/ansible-role-git)
 
 # Example Playbook
 
