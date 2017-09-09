@@ -1,37 +1,50 @@
 ---
-# tasks file for ansible-role-git-repository
 
 - include_vars: "{{ ansible_os_family }}.yml"
 
 - include: "install-{{ ansible_os_family }}.yml"
 
-- name: Create log directory
+- name: Assert that git_clone_repositories has mandatory keys
+  assert:
+    msg: All items must have dest, repo, and state defined
+    that:
+      - (item.dest is defined) and (item.dest | length > 0)
+      - (item.repo is defined) and (item.repo | length > 0)
+      - item.state is defined
+  with_items: "{{ git_clone_repositories }}"
+
+- name: Assert that `state` in all items is either present or absent
+  assert:
+    msg: state must be either `present` or `absent`
+    that:
+      - item.state == 'present' or item == 'absent'
+  with_items: "{{ git_clone_repositories }}"
+
+- name: Clone repositories
+  git:
+    accept_hostkey: "{{ item.accept_hostkey | default(omit) }}"
+    clone: yes
+    dest: "{{ item.dest }}"
+    force: "{{ item.force | default(omit) }}"
+    recursive: "{{ item.recursive | default(omit) }}"
+    remote: "{{ item.remote | default(omit) }}"
+    repo: "{{ item.repo }}"
+    track_submodules: "{{ item.track_submodules | default(omit) }}"
+    umask: "{{ item.umask | default(omit) }}"
+    # XXX item.update does not work. neither `default(omit)`
+    # https://github.com/ansible/ansible/issues/11524
+    update: "{{ item['update'] | default('yes') | bool }}"
+    version: "{{ item.version | default(omit) }}"
+  become: "{% if 'user' in item %}{{ 'yes' | bool }}{% else %}{{ omit }}{% endif %}"
+  become_user: "{{ item.user | default(omit) }}"
+  with_items: "{{ git_clone_repositories }}"
+  when:
+    - item.state == 'present'
+
+- name: Remove repositories
   file:
-    path: "{{ git_repository_log_dir }}"
-    mode: 0755
-    owner: "{{ git_repository_user }}"
-    group: "{{ git_repository_group }}"
-    state: directory
-  notify: Restart git_repository
-
-- name: Create db directory
-  file:
-    path: "{{ git_repository_db_dir }}"
-    mode: 0755
-    owner: "{{ git_repository_user }}"
-    group: "{{ git_repository_group }}"
-    state: directory
-  notify: Restart git_repository
-
-- name: Create git_repository.conf
-  template:
-    src: git_repository.conf.j2
-    dest: "{{ git_repository_conf_file }}"
-    validate: echo %s
-  notify: Restart git_repository
-
-- name: Start git_repository
-  service:
-    name: "{{ git_repository_service }}"
-    enabled: true
-    state: started
+    path: "{{ item.dest }}"
+    state: absent
+  with_items: "{{ git_clone_repositories }}"
+  when:
+    - item.state == 'absent'

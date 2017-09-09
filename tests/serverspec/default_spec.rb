@@ -1,58 +1,55 @@
 require "spec_helper"
 require "serverspec"
+require "uri"
 
-package = "git_repository"
-service = "git_repository"
-config  = "/etc/git_repository/git_repository.conf"
-user    = "git_repository"
-group   = "git_repository"
-ports   = [PORTS]
-log_dir = "/var/log/git_repository"
-db_dir  = "/var/lib/git_repository"
+default_user = "root"
 
-case os[:family]
-when "freebsd"
-  config = "/usr/local/etc/git_repository.conf"
-  db_dir = "/var/db/git_repository"
-end
+url = "https://github.com/reallyenglish/ansible-role-example"
+cloned = [
+  { path: "/usr/local/git_clone/ansible-role-example",
+    user: default_user,
+    file_mode: 644,
+    dir_mode: 755,
+    remote: url },
+  { path: "/usr/local/git_clone/update",
+    user: default_user,
+    file_mode: 644,
+    dir_mode: 755,
+    remote: url },
+  { path: "/usr/local/git_clone/bin/repo",
+    user: "bin",
+    file_mode: 644,
+    dir_mode: 755,
+    remote: url },
+  { path: "/usr/local/git_clone/umask",
+    user: default_user,
+    file_mode: 664,
+    dir_mode: 775,
+    remote: url }
+]
 
-describe package(package) do
-  it { should be_installed }
-end
+cloned.each do |c|
+  describe file(c[:path]) do
+    it { should exist }
+    it { should be_directory }
+    it { should be_mode c[:dir_mode] }
+    it { should be_owned_by c[:user] }
+  end
 
-describe file(config) do
-  it { should be_file }
-  its(:content) { should match Regexp.escape("git_repository") }
-end
-
-describe file(log_dir) do
-  it { should exist }
-  it { should be_mode 755 }
-  it { should be_owned_by user }
-  it { should be_grouped_into group }
-end
-
-describe file(db_dir) do
-  it { should exist }
-  it { should be_mode 755 }
-  it { should be_owned_by user }
-  it { should be_grouped_into group }
-end
-
-case os[:family]
-when "freebsd"
-  describe file("/etc/rc.conf.d/git_repository") do
+  describe file("#{c[:path]}/README.md") do
+    it { should exist }
     it { should be_file }
+    it { should be_owned_by c[:user] }
+    it { should be_mode c[:file_mode] }
+  end
+
+  describe command("cd '#{c[:path]}' && git remote -v") do
+    its(:exit_status) { should eq 0 }
+    its(:stdout) { should match(/^origin\s+#{Regexp.escape(c[:remote])} \(fetch\)$/) }
+    its(:stdout) { should match(/^origin\s+#{Regexp.escape(c[:remote])} \(push\)$/) }
   end
 end
 
-describe service(service) do
-  it { should be_running }
-  it { should be_enabled }
-end
-
-ports.each do |p|
-  describe port(p) do
-    it { should be_listening }
-  end
+describe file("/tmp/should_not_exist") do
+  it { should_not exist }
 end

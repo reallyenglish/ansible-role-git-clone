@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   author: Tomoyuki Sakurai
-  description: Configures something
+  description: Clones git repositories
   company: Reallyenglish
   license: BSD
   min_ansible_version: 2.0
@@ -13,16 +13,15 @@ galaxy_info:
 #    versions:
 #    - 6.0
 #    - 6.1
-#  - name: Ubuntu
-#    versions:
-#    - trusty
-#    - xenial
-#  - name: EL
-#    versions:
-#    - 7
+  - name: Ubuntu
+    versions:
+    - trusty
+    - xenial
+  - name: EL
+    versions:
+    - 7
 
   galaxy_tags:
     - system
-#dependencies:
-#  - role: username.common
-#    when: some_parameter == 1
+dependencies:
+  - role: reallyenglish.git

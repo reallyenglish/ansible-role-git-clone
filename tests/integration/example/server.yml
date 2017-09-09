@@ -9,4 +9,4 @@
 
   pre_tasks:
   roles:
-    - git_repository
+    - git_clone

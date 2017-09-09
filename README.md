@@ -1,16 +1,39 @@
-# ansible-role-git-repository
+# ansible-role-git-clone
 
-A brief description of the role goes here.
+A simple wrapper of `ansible` `git` module to clone repositories.
 
 # Requirements
 
-None
+* [`ansible-role-git`](https://github.com/reallyenglish.com/ansible-role-git)
 
 # Role Variables
 
-| variable | description | default |
+| Variable | Description | Default |
 |----------|-------------|---------|
+| `git_clone_repositories` | list of repositories to clone (see below) | `[]` |
 
+## `git_clone_repositories`
+
+This is a list of dict. Keys are a subset of parameters of `ansible` `git`
+module. Supported parameters are:
+
+* `accept_hostkey`
+* `dest`
+* `force`
+* `recursive`
+* `remote`
+* `repo`
+* `track_submodules`
+* `umask`
+* `update`
+* `version`
+
+Additionally, the following keys are supported in the table below.
+
+| Key | Description | Mandatory? |
+|-----|-------------|------------|
+| `user` | user name to clone as | no |
+| `state` | state of the repository, either `present` or `absent` | yes |
 
 # Dependencies
 
@@ -19,6 +42,36 @@ None
 # Example Playbook
 
 ```yaml
+- hosts: localhost
+  roles:
+    - ansible-role-git-clone
+  pre_tasks:
+    - file:
+        path: /usr/local/git_clone/bin
+        owner: bin
+        state: directory
+  vars:
+    url: https://github.com/reallyenglish/ansible-role-example
+    git_clone_repositories:
+      - repo: "{{ url }}"
+        dest: /usr/local/git_clone/ansible-role-example
+        accept_hostkey: yes
+        state: present
+      - repo: "{{ url }}"
+        dest: /usr/local/git_clone/update
+        accept_hostkey: yes
+        update: yes
+        state: present
+      - repo: "{{ url }}"
+        dest: /usr/local/git_clone/bin/repo
+        accept_hostkey: yes
+        user: bin
+        state: present
+      - repo: "{{ url }}"
+        dest: /usr/local/git_clone/umask
+        accept_hostkey: yes
+        umask: 002
+        state: present
 ```
 
 # License

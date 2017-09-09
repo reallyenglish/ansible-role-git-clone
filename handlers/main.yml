@@ -1,6 +1,6 @@
 ---
 
-- name: Restart git_repository
+- name: Restart git_clone
   service:
-    name: git_repository
+    name: git_clone
     state: restarted
