@@ -1,0 +1,6 @@
+---
+
+- name: Restart git-repository
+  service:
+    name: git-repository
+    state: restarted

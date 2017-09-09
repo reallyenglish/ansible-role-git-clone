@@ -1,0 +1,6 @@
+---
+
+- name: Install git-repository
+  pkgng:
+    name: git-repository
+    state: present
