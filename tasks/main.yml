@@ -7,31 +7,31 @@
 
 - name: Create log directory
   file:
-    path: "{{ git-repository_log_dir }}"
+    path: "{{ git_repository_log_dir }}"
     mode: 0755
-    owner: "{{ git-repository_user }}"
-    group: "{{ git-repository_group }}"
+    owner: "{{ git_repository_user }}"
+    group: "{{ git_repository_group }}"
     state: directory
-  notify: Restart git-repository
+  notify: Restart git_repository
 
 - name: Create db directory
   file:
-    path: "{{ git-repository_db_dir }}"
+    path: "{{ git_repository_db_dir }}"
     mode: 0755
-    owner: "{{ git-repository_user }}"
-    group: "{{ git-repository_group }}"
+    owner: "{{ git_repository_user }}"
+    group: "{{ git_repository_group }}"
     state: directory
-  notify: Restart git-repository
+  notify: Restart git_repository
 
-- name: Create git-repository.conf
+- name: Create git_repository.conf
   template:
-    src: git-repository.conf.j2
-    dest: "{{ git-repository_conf_file }}"
+    src: git_repository.conf.j2
+    dest: "{{ git_repository_conf_file }}"
     validate: echo %s
-  notify: Restart git-repository
+  notify: Restart git_repository
 
-- name: Start git-repository
+- name: Start git_repository
   service:
-    name: "{{ git-repository_service }}"
+    name: "{{ git_repository_service }}"
     enabled: true
     state: started

@@ -1,19 +1,19 @@
 require "spec_helper"
 require "serverspec"
 
-package = "git-repository"
-service = "git-repository"
-config  = "/etc/git-repository/git-repository.conf"
-user    = "git-repository"
-group   = "git-repository"
+package = "git_repository"
+service = "git_repository"
+config  = "/etc/git_repository/git_repository.conf"
+user    = "git_repository"
+group   = "git_repository"
 ports   = [PORTS]
-log_dir = "/var/log/git-repository"
-db_dir  = "/var/lib/git-repository"
+log_dir = "/var/log/git_repository"
+db_dir  = "/var/lib/git_repository"
 
 case os[:family]
 when "freebsd"
-  config = "/usr/local/etc/git-repository.conf"
-  db_dir = "/var/db/git-repository"
+  config = "/usr/local/etc/git_repository.conf"
+  db_dir = "/var/db/git_repository"
 end
 
 describe package(package) do
@@ -22,7 +22,7 @@ end
 
 describe file(config) do
   it { should be_file }
-  its(:content) { should match Regexp.escape("git-repository") }
+  its(:content) { should match Regexp.escape("git_repository") }
 end
 
 describe file(log_dir) do
@@ -41,7 +41,7 @@ end
 
 case os[:family]
 when "freebsd"
-  describe file("/etc/rc.conf.d/git-repository") do
+  describe file("/etc/rc.conf.d/git_repository") do
     it { should be_file }
   end
 end

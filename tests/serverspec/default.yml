@@ -2,4 +2,4 @@
   roles:
     - ansible-role-git-repository
   vars:
-    git-repository_config: ""
+    git_repository_config: ""
