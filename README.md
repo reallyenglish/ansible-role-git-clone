@@ -55,21 +55,17 @@ Additionally, the following keys are supported in the table below.
     git_clone_repositories:
       - repo: "{{ url }}"
         dest: /usr/local/git_clone/ansible-role-example
-        accept_hostkey: yes
         state: present
       - repo: "{{ url }}"
         dest: /usr/local/git_clone/update
-        accept_hostkey: yes
         update: yes
         state: present
       - repo: "{{ url }}"
         dest: /usr/local/git_clone/bin/repo
-        accept_hostkey: yes
         user: bin
         state: present
       - repo: "{{ url }}"
         dest: /usr/local/git_clone/umask
-        accept_hostkey: yes
         umask: 002
         state: present
 ```
