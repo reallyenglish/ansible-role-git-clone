@@ -1,6 +1,6 @@
 node ('virtualbox') {
 
-  def directory = "ansible-role-git-repository"
+  def directory = "ansible-role-git-clone"
   env.ANSIBLE_VAULT_PASSWORD_FILE = "~/.ansible_vault_key"
   stage 'Clean up'
   deleteDir()

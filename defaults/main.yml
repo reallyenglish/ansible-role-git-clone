@@ -1,8 +1,1 @@
-git-repository_user: git-repository
-git-repository_group: git-repository
-git-repository_log_dir: /var/log/git-repository
-git-repository_db_dir: "{{ __git-repository_db_dir }}"
-git-repository_service: git-repository
-git-repository_conf_dir: "{{ __git-repository_conf_dir }}"
-git-repository_conf_file: "{{ __git-repository_conf_dir }}/git-repository.conf"
-git-repository_flags: ""
+git_clone_repositories: []

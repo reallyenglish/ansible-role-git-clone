@@ -1,5 +1,26 @@
 - hosts: localhost
   roles:
-    - ansible-role-git-repository
+    - ansible-role-git-clone
+  pre_tasks:
+    - file:
+        path: /usr/local/git_clone/bin
+        owner: bin
+        state: directory
   vars:
-    git-repository_config: ""
+    url: https://github.com/reallyenglish/ansible-role-example
+    git_clone_repositories:
+      - repo: "{{ url }}"
+        dest: /usr/local/git_clone/ansible-role-example
+        state: present
+      - repo: "{{ url }}"
+        dest: /usr/local/git_clone/update
+        update: yes
+        state: present
+      - repo: "{{ url }}"
+        dest: /usr/local/git_clone/bin/repo
+        user: bin
+        state: present
+      - repo: "{{ url }}"
+        dest: /usr/local/git_clone/umask
+        umask: 002
+        state: present
