@@ -49,7 +49,3 @@ cloned.each do |c|
     its(:stdout) { should match(/^origin\s+#{Regexp.escape(c[:remote])} \(push\)$/) }
   end
 end
-
-describe file("/tmp/should_not_exist") do
-  it { should_not exist }
-end

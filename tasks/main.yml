@@ -4,20 +4,14 @@
 
 - include: "install-{{ ansible_os_family }}.yml"
 
-- name: Assert that git_clone_repositories has mandatory keys
+- name: Assert that git_clone_repositories has mandatory keys, and `state` in all items is either present or absent
   assert:
-    msg: All items must have dest, repo, and state defined
+    msg: All items must have `dest`, `repo`, and `state` defined either `present` or `absent`
     that:
       - (item.dest is defined) and (item.dest | length > 0)
       - (item.repo is defined) and (item.repo | length > 0)
       - item.state is defined
-  with_items: "{{ git_clone_repositories }}"
-
-- name: Assert that `state` in all items is either present or absent
-  assert:
-    msg: state must be either `present` or `absent`
-    that:
-      - item.state == 'present' or item == 'absent'
+      - item.state == 'present' or item.state == 'absent'
   with_items: "{{ git_clone_repositories }}"
 
 - name: Clone repositories

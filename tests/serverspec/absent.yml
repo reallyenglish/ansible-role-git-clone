@@ -1,0 +1,13 @@
+- hosts: localhost
+  roles:
+    - ansible-role-git-clone
+  pre_tasks:
+    - file:
+        path: /tmp/should_not_exist
+        state: directory
+  vars:
+    url: https://github.com/reallyenglish/ansible-role-example
+    git_clone_repositories:
+      - repo: "{{ url }}"
+        dest: /tmp/should_not_exist
+        state: absent
